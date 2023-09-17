@@ -1,7 +1,7 @@
+use sqlx::{Connection, PgConnection};
 use std::collections::HashMap;
 use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
-use sqlx::{PgConnection, Connection};
 #[tokio::test]
 async fn health_check_works() {
     let address = spawn_app();
@@ -31,10 +31,9 @@ async fn subscribe_returns_200_for_valid_form() {
     body.insert("name", "Leeroy Jenkins");
     body.insert("email", "john.doe@example.com");
 
-
     let response = client
         .post(&format!("{}/subscriptions", &app_address))
-        .header("content_type","application/json")
+        .header("content_type", "application/json")
         .json(&body)
         .send()
         .await
@@ -59,7 +58,7 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
     let test_cases = vec![
         ("{\"email\": \"missing the email\"}", "missing the email"),
         ("{\"name\": \"missing the name\"}", "missing the "),
-        ("{}", "missing both name and email")
+        ("{}", "missing both name and email"),
     ];
 
     for (invalid_body, error_message) in test_cases {
